@@ -1,0 +1,25 @@
+# Dependencies (Just for local manual installing using packages)
+
+node_modules/
+
+# Builds (Compilation results) 
+
+dist/
+
+# Environment variables (Critical parts, don't be abel to clone)
+
+.env
+.env.*
+!.env.example
+
+# Logs
+*.log
+
+# Test coverage (N/A Important files)
+
+coverage/
+
+#OS files (Cleaning trash)
+
+.DS_Store
+Thumbs.db
