@@ -1,43 +1,26 @@
 import { useState } from 'react'
+import { createVideo } from './services/api' // Foi colocado entre chaves pois foi uma exportacao nomeada
 
 function App() {
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false); // useState(false) para indicar que o valor armazenado será false para que no momento do evento de loading seja alterado para um true (valor booleano)
 
-  async function createVideo() {
+  async function handleCreateVideo() { // mudanca na nomenclatura da funcao createVideo para handleCreateVideo para evitar conflito com a funcao importada do services/api.ts
     setLoading(true);
     setMessage("");
 
     try {
-      const response = await fetch("http://localhost:3001/videos", {
-        method: "POST",
+      const data = await createVideo(title) 
 
-        headers: {
-          "Content-Type": "application/json",
-        },
-
-        body: JSON.stringify({
-          title,
-        }),
-      });
-
-      const data = await response.json()
-
-      if(!response.ok) { // a resposta NÃO foi bem-sucedida?
-        throw new Error( // Cria um objeto que representa um erro | Throw neste caso significa "lance esse erro"
-          data.message ?? "Erro ao enviar o vídeo" // neste ponto é indicado para que SE data.message existir, use ela, caso contrário use a mensagem padrão.
-        )
-      }
-
-      setMessage(data.message ?? `Vídeo recebido: ${data.title}`);
+      setMessage(`Vídeo recebido: ${data.title}`);
     } catch (error) {
       console.error(error);
 
-      if (error instanceof Error) { // Verifica se o valor realmente é um erro, se for verdade ele retorna um valor booleano "True" ou "False"
-        setMessage(error.message)
+      if (error instanceof Error) {
+        setMessage(error.message);
       } else {
-        setMessage("Ocorreu um erro inesperado.");
+        setMessage("Ocorreu um erro inesperado");
       }
     } finally {
       setLoading(false);
@@ -57,7 +40,7 @@ function App() {
       />
 
       <button 
-        onClick={createVideo} /* createVideo() executa a função imediatamente durante a renderização. Já createVideo faz com que o React execute futuramente. */
+        onClick={handleCreateVideo} /* createVideo() executa a função imediatamente durante a renderização. Já createVideo faz com que o React execute futuramente. */
         disabled={loading} // Desabilita o botão a partir do momento em que entra em estado de loading
       >
       {loading ? "Enviando..." : "Enviar"} {/* Operador ternário. Condição ? valorSeTrue : valorSeFalse  */}
